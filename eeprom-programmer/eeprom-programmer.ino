@@ -89,31 +89,9 @@ void setup() {
   pinMode(SHIFT_LATCH, OUTPUT);
   digitalWrite(WRITE_EN, HIGH);
   pinMode(WRITE_EN, OUTPUT);
-  Serial.begin(57600);
+  Serial.begin(115200);
 
-  // Erase entire EEPROM
-  Serial.print("Erasing EEPROM");
-  for (int address = 0; address <= 2047; address += 1) {
-    writeEEPROM(address, 0xff);
-
-    if (address % 64 == 0) {
-      Serial.print(".");
-    }
-  }
-  Serial.println(" done");
-
-
-  // Program data bytes
-  Serial.print("Programming EEPROM");
-  for (int address = 0; address < sizeof(data); address += 1) {
-    writeEEPROM(address, data[address]);
-
-    if (address % 64 == 0) {
-      Serial.print(".");
-    }
-  }
-  Serial.println(" done");
-
+  
 
   // Read and print out the contents of the EERPROM
   Serial.println("Reading EEPROM");

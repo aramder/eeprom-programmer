@@ -38,6 +38,11 @@ The code in [`/microcode-eeprom-programmer`](/microcode-eeprom-programmer) is fo
 The code in [`/microcode-eeprom-with-flags`](/microcode-eeprom-with-flags) adds functionality for a flags register to the microcode above to support conditional instructions. Again, you’ll likely want more context from the full series of videos, but here’s the video describing the code:
 - [Conditional jump instructions](https://youtu.be/Zg1NdPKoosU).
 
+### 5. Programmer for my 6502 EEPROM
+
+The code in [`/my-6502-eeprom-programmer`](/my-6502-eeprom-programmer) is a variation on the basic EEPROM programmer, made to write/read the EEPROM (KM28C256-20) used in my breadboard 6502.
+- [General datasheet, see page 216 for KM28C256 and pages before for family timing information](http://www.bitsavers.org/components/samsung/1988_Samsung_MOS_Memory_Data_Book.pdf)
+
 ## More information
 
 This EEPROM programmer was designed as part of a larger project to build an 8-bit computer from scratch. There’s a much larger [series of videos about this project](https://www.youtube.com/playlist?list=PLowKtXNTBypGqImE405J2565dvjafglHU) on YouTube as well. In all likelihood, if this repo interests you, you want to binge that whole playlist.
