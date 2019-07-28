@@ -1,14 +1,13 @@
 /*
-   Programmer for EEPROM for use in my breadboard 6502
-
-   Heavily based on Ben Eater's eeprom programmer
-
-*/
-
+ * Programmer for EEPROM for use in my breadboard 6502
+ * Aram Dergevorkian
+ * July 2019
+ * 
+ * Heavily based on Ben Eater's eeprom programmer
+ * https://github.com/beneater/eeprom-programmer
+ */
+ 
 #include "program_data.h"
-
-#define ERASE_LENGTH 0x7FFF
-#define PRINT_LENGTH 0x7FFF
 
 // IO defines
 #define SHIFT_DATA 2
@@ -27,17 +26,18 @@ void setup() {
   Serial.begin(115200);
   Serial.print("\r\n\r\n");
 
-  printContents();
-
-  eraseEEPROM();
-
+  printContents(0, 0x0100);
+  printContents(0x7FF0, 0x7FFF);
+  
   for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin += 1) {
     pinMode(pin, OUTPUT);
   }
+  
+  eraseEEPROM(0x0100);
 
   // Program data bytes
-  Serial.print("Programming EEPROM");
-  for (int address = 0; address < sizeof(data); address += 1) {
+  Serial.print("Programming code data");
+  for (uint16_t address = 0; address < sizeof(data); address += 1) {
     writeEEPROM(address, data[address]);
 
     if (address % 128 == 0) {
@@ -46,12 +46,14 @@ void setup() {
   }
   Serial.println(" done");
 
-  Serial.print("Programming vector data");
-  for (int address = 0x7FFC; address < 0x7FFF; address += 1) {
-    writeEEPROM(address, vector_data[address]);
+  Serial.print("Programming vector data.");
+  for (uint16_t address = 0x7FFA; address <= 0x7FFF; address += 1) {
+    writeEEPROM(address, vector_data[(address - 0x7FFA)]);
   }
-
-  printContents();
+  Serial.println(" done");
+  
+  printContents(0, 0x0100);
+  printContents(0x7FF0, 0x7FFF);
 }
 
 void loop() {
@@ -102,12 +104,12 @@ void writeEEPROM(uint16_t address, byte data) {
 /*
    Erase contents of EEPROM
 */
-void eraseEEPROM(void) {
+void eraseEEPROM(uint16_t erase_bytes) {
   Serial.print("Erasing EEPROM");
-  for (uint16_t address = 0; address <= ERASE_LENGTH; address += 1) {
+  for (uint16_t address = 0; address <= erase_bytes; address += 1) {
     writeEEPROM(address, 0xFF);
 
-    if (address % 128 == 0) {
+    if (address % 1024 == 0) {
       Serial.print(".");
     }
   }
@@ -117,13 +119,13 @@ void eraseEEPROM(void) {
 /*
    Read the contents of the EEPROM and print them to the serial monitor.
 */
-void printContents() {
+void printContents(uint16_t printout_start, uint16_t printout_end) {
   Serial.println("Reading EEPROM");
   for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin += 1) {
     pinMode(pin, INPUT);
   }
 
-  for (uint16_t base = 0; base <= PRINT_LENGTH; base += 16) {
+  for (uint16_t base = printout_start; base <= printout_end; base += 16) {
     byte data[16];
     for (uint16_t offset = 0; offset <= 15; offset += 1) {
       data[offset] = readEEPROM(base + offset);
