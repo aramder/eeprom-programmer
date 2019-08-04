@@ -7,6 +7,8 @@
  * RST, NMI, and IRQ vectors are at $FFFA-$FFFF
  * which correlate to $7FFA-7FFF in the ROM
  * 
+ * All vectors will point to start of ROM
+ * 
  * See: http://wilsonminesco.com/6502primer/MemMapReqs.html for memory mapping information
  */
 

@@ -40,8 +40,9 @@ The code in [`/microcode-eeprom-with-flags`](/microcode-eeprom-with-flags) adds 
 
 ### 5. Programmer for my 6502 EEPROM
 
-The code in [`/my-6502-eeprom-programmer`](/my-6502-eeprom-programmer) is a variation on the basic EEPROM programmer, made to write/read the EEPROM (KM28C256-20) used in my breadboard 6502.
-- [General datasheet, see page 216 for KM28C256 and pages before for family timing information](http://www.bitsavers.org/components/samsung/1988_Samsung_MOS_Memory_Data_Book.pdf)
+The code in [`/my-6502-eeprom-programmer`](/my-6502-eeprom-programmer) is a variation on the basic EEPROM programmer, made to write/read the EEPROM (KM28C256-20) used in my breadboard 6502. Reading and writing is configured for two different address spaces, one for the actual code, and one for the 6502's reset, IRQ, and NMI vectors.
+- [General datasheet, see page 216 for KM28C256 and pages before for family timing information](http://www.bitsavers.org/components/samsung/1988_Samsung_MOS_Memory_Data_Book.pdf#page=216)
+- [Garth Wilson's 6502 website](http://wilsonminesco.com/6502primer/potpourri.html#BAS_CPU) - my breadboard 6502 is nearly identical to the basic computer shown here
 
 ## More information
 
