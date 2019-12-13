@@ -26,14 +26,14 @@ void setup() {
   Serial.begin(115200);
   Serial.print("\r\n\r\n");
 
-  printContents(0, 0x0100);
+  printContents(0, 0x0200);
   printContents(0x7FF0, 0x7FFF);
   
   for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin += 1) {
     pinMode(pin, OUTPUT);
   }
   
-  eraseEEPROM(0x0100);
+  eraseEEPROM(0x0200);
 
   // Program data bytes
   Serial.print("Programming code data");
@@ -52,7 +52,7 @@ void setup() {
   }
   Serial.println(" done");
   
-  printContents(0, 0x0100);
+  printContents(0, 0x0200);
   printContents(0x7FF0, 0x7FFF);
 }
 
