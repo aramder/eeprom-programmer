@@ -9,6 +9,8 @@
  
 #include "program_data.h"
 
+#define ODD_EEPROM 1
+
 // IO defines
 #define SHIFT_DATA 2
 #define SHIFT_CLK 3
@@ -16,8 +18,6 @@
 #define EEPROM_D0 5
 #define EEPROM_D7 12
 #define WRITE_EN 13
-
-#define ODD_EEPROM 1
 
 void setup() {
   pinMode(SHIFT_DATA, OUTPUT);
@@ -33,6 +33,7 @@ void setup() {
   }
 
   printContents(0x0800, 0x0900);
+  printContents(0x1000, 0x1010);
   printContents(0x3FF8, 0x3FFF);
   
   for (int pin = EEPROM_D0; pin <= EEPROM_D7; pin += 1) {
@@ -40,17 +41,30 @@ void setup() {
   }
 
   eraseEEPROM(0x0800, 0x0810);
-  eraseEEPROM(0x3ff8, 0x3fff);
-//  eraseEEPROM(0x3FFF);
+  eraseEEPROM(0x1000, 0x1010);
+  eraseEEPROM(0x3FF8, 0x3FFF);
 
-  // Program data bytes
   Serial.print("Programming code data for ");
   Serial.print(ODD_EEPROM ? "odd " : "even ");
   Serial.print("EEPROM");
   uint16_t array_position = ODD_EEPROM;
   uint16_t address;
-  for (address = 0x0800; address < (0x0800 + (sizeof(program_data) / 2)); address += 1) {
+//  for (address = 0x0800; address < (0x0800 + (sizeof(program_data) / 2) + 1); address += 1) {
+  for (address = 0x0800; address < (0x0800 + (ODD_EEPROM ? 8 : 9)); address += 1) {
     writeEEPROM(address, program_data[array_position]);
+    array_position += 2;
+    if (address % 128 == 0) {
+      Serial.print(".");
+    }
+  }
+  Serial.println(" done");
+
+  Serial.print("Programming constant data for ");
+  Serial.print(ODD_EEPROM ? "odd " : "even ");
+  Serial.print("EEPROM");
+  array_position = ODD_EEPROM;
+  for (address = 0x1000; address < (0x1000 + (sizeof(program_data) / 2)); address += 1) {
+    writeEEPROM(address, const_data[array_position]);
     array_position += 2;
     if (address % 128 == 0) {
       Serial.print(".");
@@ -60,7 +74,7 @@ void setup() {
 
   Serial.print("Programming reset vector code data");
   array_position = ODD_EEPROM;
-  for (address = 0x3FF8; address < (0x3FF8 + (sizeof(reset_program_data) / 2)); address += 1) {
+  for (address = 0x3FF8; address < (0x3FF8 + (ODD_EEPROM ? 2 : 3)); address += 1) {
     writeEEPROM(address, reset_program_data[array_position]);
     array_position += 2;
   }
@@ -71,6 +85,7 @@ void setup() {
   }
   
   printContents(0x0800, 0x0900);
+  printContents(0x1000, 0x1010);
   printContents(0x3FF8, 0x3FFF);
 }
 
